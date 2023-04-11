@@ -1,0 +1,114 @@
+from random import randint
+
+class Dee:
+    def __init__(self):
+        self.value = randint(1,6)
+    def __repr__(self):
+        return self.value
+
+class Joueur:
+    def __init__(self,name):
+        self.name = name
+        self.jetons = 0
+        
+    def __repr__(self):
+        return f"{self.name} jetons:{self.jetons}"
+    
+def lancer():
+    return sorted([Dee().value,Dee().value,Dee().value])
+
+def value_jeton(v):
+    if v == [1,2,4]:
+        return 10
+    elif v == [1,1,1]:
+        return 7
+    elif v == [1,1,6] or v == [6,6,6]:               
+        return 6
+    elif v == [1,1,5] or v == [5,5,5]:
+        return 5
+    elif v == [1,1,4] or v == [4,4,4]:
+        return 4
+    elif v == [1,1,3] or v == [3,3,3]:
+        return 3
+    elif v == [1,1,2] or v== [2,2,2]:
+        return 2
+    elif v in [[1,2,3],[2,3,4],[3,4,5],[4,5,6]]:
+        return 2
+    else:
+        return 1
+
+class Jeu:
+    POT = 21
+    MANCHE = 1
+    def __init__(self,j1,j2):
+        self.l1 =lancer()
+        self.l2 =lancer()
+        self.j1 =j1
+        self.j2 = j2
+        self.player = {j1.name:self.l1,j2.name:self.l2}
+        self.j1_jeton = value_jeton(self.l1)
+        self.j2_jeton = value_jeton(self.l2)
+        
+
+    def manche1(self):
+        print(f'Manche n°{Jeu.MANCHE}')
+        Jeu.MANCHE+=1
+        print(f"{self.j1.name} lance: " + str([chr(9855+self.l1[i]) for i in range(3)])+f"\n{self.j2.name} lance:"+str([chr(9855+self.l2[i]) for i in range(3)])+"\n")
+        if self.j1_jeton < self.j2_jeton:
+            self.j1.jetons += self.j2_jeton
+            Jeu.POT -= self.j2_jeton
+            if Jeu.POT <= 0:
+                self.j1.jetons += Jeu.POT
+                Jeu.POT = 0
+                Jeu.MANCHE = 1
+                
+        
+        elif self.j1_jeton > self.j2_jeton:
+            self.j2.jetons += self.j1_jeton
+            Jeu.POT -= self.j1_jeton
+            if Jeu.POT <= 0:
+                self.j2.jetons += Jeu.POT
+                Jeu.POT = 0
+                Jeu.MANCHE = 1
+        
+    def manche2(self):
+        print(f'Manche n°{Jeu.MANCHE}')
+        print(f"{self.j1.name} lance: " + str([chr(9855+self.l1[i]) for i in range(3)])+f"\n{self.j2.name} lance:"+str([chr(9855+self.l2[i]) for i in range(3)])+"\n")
+        Jeu.MANCHE+=1
+        if self.j1_jeton < self.j2_jeton:
+            self.j1.jetons += self.j2_jeton
+            self.j2.jetons -= self.j2_jeton
+            if self.j2.jetons < 0:
+                self.j1.jetons = 21
+                self.j2.jetons = 0
+        elif self.j1_jeton > self.j2_jeton:
+            self.j1.jetons -= self.j1_jeton
+            self.j2.jetons += self.j1_jeton
+            if self.j1.jetons < 0:
+                self.j2.jetons = 21
+                self.j1.jetons = 0
+
+def jouer():
+    print("_____ La charge _____")
+    while (joueur1.jetons + joueur2.jetons)<21:
+        jeu = Jeu(joueur1,joueur2)
+        jeu.manche1()
+        print(f"jetons {joueur1.name} =",joueur1.jetons, f"\njetons {joueur2.name} : ",joueur2.jetons,"\n")
+    print("_____ La décharge_____")
+    while joueur1.jetons > 0 and joueur2.jetons > 0:
+        jeu.manche2()
+        print(f"jetons {joueur1.name} =",joueur1.jetons, f"\njetons {joueur2.name} : ",joueur2.jetons,"\n")
+    if joueur1.jetons>0:
+        print(f"{joueur2.name} a gagné")
+    elif joueur2.jetons>0:
+        print(f"{joueur1.name} a gagné")
+        
+joueur1 = Joueur(input("Quel est le nom du premier joueur "))
+joueur2 = Joueur(input("Quel est le nom du deuxième joueur "))
+
+while joueur1.name.strip() == joueur2.name.strip() and joueur1.name.strip()!="" and joueur2.name.strip()!="":
+    print("Veuillez rentrer des noms corrects et différents")
+    joueur1 = Joueur(input("Quel est le nom du premier joueur "))
+    joueur2 = Joueur(input("Quel est le nom du deuxième joueur "))
+    
+jouer()
