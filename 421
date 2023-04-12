@@ -93,11 +93,12 @@ def jouer():
     while (joueur1.jetons + joueur2.jetons)<21:
         jeu = Jeu(joueur1,joueur2)
         jeu.manche1()
-        print(f"jetons {joueur1.name} =",joueur1.jetons, f"\njetons {joueur2.name} : ",joueur2.jetons,"\n")
+        print(f"jetons {joueur1.name} : ",joueur1.jetons, f"\njetons {joueur2.name} : ",joueur2.jetons,"\n")
     print("_____ La décharge_____")
     while joueur1.jetons > 0 and joueur2.jetons > 0:
+        jeu = Jeu(joueur1,joueur2)
         jeu.manche2()
-        print(f"jetons {joueur1.name} =",joueur1.jetons, f"\njetons {joueur2.name} : ",joueur2.jetons,"\n")
+        print(f"jetons {joueur1.name} : ",joueur1.jetons, f"\njetons {joueur2.name} : ",joueur2.jetons,"\n")
     if joueur1.jetons>0:
         print(f"{joueur2.name} a gagné")
     elif joueur2.jetons>0:
